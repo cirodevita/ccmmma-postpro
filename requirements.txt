@@ -1,3 +1,4 @@
 netCDF4==1.6.5
 scipy
 numba
+numpy==1.26.4
