@@ -10,6 +10,7 @@ class Wacomm:
 
         self.conc = None
         self.sfconc = None
+        self.mask = None
 
         self.ncdstfile = Dataset(filename, "w", format="NETCDF4")
 
@@ -48,6 +49,11 @@ class Wacomm:
         self.latVar.standard_name = "latitude"
         self.latVar.axis = "Y"
 
+        self.maskVar = self.ncdstfile.createVariable("mask", "f4", ("latitude", "longitude"), fill_value=1.e37)
+        self.maskVar.option_0 = "land"
+        self.maskVar.option_1 = "water"
+        self.maskVar.long_name = "mask on RHO points"
+
         self.concVar = self.ncdstfile.createVariable("conc", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37)
         self.concVar.description = "concentration of suspended matter in sea water"
         self.concVar.units = "1"
@@ -66,6 +72,7 @@ class Wacomm:
 
         self.concVar[:] = self.conc
         self.sfconcVar[:] = self.sfconc
+        self.maskVar[:] = self.mask
 
     def close(self):
         if self.ncdstfile:

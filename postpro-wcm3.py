@@ -51,6 +51,7 @@ if __name__ == '__main__':
     print("...conc")
 
     print("Saving archive file...")
+    wacomm.mask = interpolator3DRho.mask
     wacomm.conc = conc
     wacomm.sfconc = conc[0, 0]
     wacomm.write()
