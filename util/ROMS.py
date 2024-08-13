@@ -98,7 +98,7 @@ class ROMS:
         self.depthVar[:] = self.depths
 
         self.zetaVar[:] = self.zeta
-        self.saltVar[:] = self.temp
+        self.saltVar[:] = self.salt
         self.tempVar[:] = self.temp
         self.uVar[:] = self.U
         self.vVar[:] = self.V
