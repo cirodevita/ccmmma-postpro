@@ -8,6 +8,7 @@ class ROMS:
         self.depths = depths
         self.time = time
 
+        self.h = None
         self.temp = None
         self.salt = None
         self.zeta = None
@@ -15,6 +16,10 @@ class ROMS:
         self.V = None
         self.vbar = None
         self.ubar = None
+        self.tempBottom = None
+        self.saltbottom = None
+        self.uBottom = None
+        self.vBottom = None
 
         self.ncdstfile = Dataset(filename, "w", format="NETCDF4")
 
@@ -53,6 +58,12 @@ class ROMS:
         self.latVar.standard_name = "latitude"
         self.latVar.axis = "Y"
 
+        self.hVar = self.ncdstfile.createVariable("h", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.hVar.description = "Bathymetry"
+        self.hVar.units = "meter"
+        self.hVar.long_name = "bathymetry"
+        self.hVar.field = "bath, scalar"
+
         self.zetaVar = self.ncdstfile.createVariable("zeta", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
         self.zetaVar.description = "Free surface height"
         self.zetaVar.units = "meter"
@@ -64,11 +75,23 @@ class ROMS:
         self.uVar.long_name = "u-momentum component"
         self.uVar.field = "u-velocity, scalar, series"
 
+        self.uBottomVar = self.ncdstfile.createVariable("uBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.uBottomVar.description = "U-momentum component at bottom"
+        self.uBottomVar.units = "meter second-1"
+        self.uBottomVar.long_name = "u-momentum component"
+        self.uBottomVar.field = "u-velocity, scalar, series"
+
         self.vVar = self.ncdstfile.createVariable("v", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37)
         self.vVar.description = "V-momentum component"
         self.vVar.units = "meter second-1"
         self.vVar.long_name = "v-momentum component"
         self.vVar.field = "v-velocity, scalar, series"
+
+        self.vBottomVar = self.ncdstfile.createVariable("vBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.vBottomVar.description = "V-momentum component at bottom"
+        self.vBottomVar.units = "meter second-1"
+        self.vBottomVar.long_name = "v-momentum component"
+        self.vBottomVar.field = "v-velocity, scalar, series"
 
         self.ubarVar = self.ncdstfile.createVariable("ubar", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
         self.ubarVar.description = "Vertically integrated u-momentum component"
@@ -85,11 +108,22 @@ class ROMS:
         self.saltVar.long_name = "salinity"
         self.saltVar.field = "salinity, scalar, series"
 
+        self.saltBottomVar = self.ncdstfile.createVariable("saltBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.saltBottomVar.description = "Salinity at bottom"
+        self.saltBottomVar.long_name = "salinity at bottom"
+        self.saltBottomVar.field = "salinity, scalar, series"
+
         self.tempVar = self.ncdstfile.createVariable("temp", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37)
         self.tempVar.description = "Potential temperature"
         self.tempVar.units = "Celsius"
         self.tempVar.long_name = "potential temperature"
         self.tempVar.field = "temperature, scalar, series"
+
+        self.tempBottomVar = self.ncdstfile.createVariable("tempBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.tempBottomVar.description = "Potential temperature at bottom"
+        self.tempBottomVar.units = "Celsius"
+        self.tempBottomVar.long_name = "potential temperature at bottom"
+        self.tempBottomVar.field = "temperature, scalar, series"
 
     def write(self):
         self.timeVar[:] = self.time
@@ -97,6 +131,7 @@ class ROMS:
         self.latVar[:] = self.lats
         self.depthVar[:] = self.depths
 
+        self.hVar[:] = self.h
         self.zetaVar[:] = self.zeta
         self.saltVar[:] = self.salt
         self.tempVar[:] = self.temp
@@ -104,6 +139,11 @@ class ROMS:
         self.vVar[:] = self.V
         self.ubarVar[:] = self.ubar
         self.vbarVar[:] = self.vbar
+        
+        self.tempBottomVar[:] = self.tempBottom
+        self.saltBottomVar[:] = self.saltBottom
+        self.uBottomVar[:] = self.uBottom
+        self.vBottomVar[:] = self.vBottom
 
     def close(self):
         if self.ncdstfile:

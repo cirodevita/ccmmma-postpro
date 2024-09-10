@@ -40,6 +40,22 @@ def vertical_interp(s_rho, variable, depths, mask_indices, H):
     return dst
 
 
+@jit(nopython=True)
+def extract_value_at_bottom(depths, invar3d, invalid_value=1e37):
+    t, k, lon, lat = invar3d.shape
+    output2D = np.full((t, lon, lat), invalid_value)
+
+    for i in range(lat):
+        for j in range(lon):            
+            vertical_profile = invar3d[0, :, j, i]
+            valid_values = vertical_profile[vertical_profile != invalid_value]
+        
+            if len(valid_values) > 0:
+                output2D[0, j, i] = valid_values[-1]
+    
+    return output2D
+
+
 class Interp2D:
     def __init__(self, srcLons, srcLats, dstLons, dstLats):
         self.srcLons = srcLons
@@ -76,3 +92,6 @@ class Interp3D(Interp2D):
         outvar3dZeta = vertical_interp(self.s_rho.filled(np.nan), outvar3d, depths, self.mask_indices, self.H.filled(np.nan))
         outvar3dZeta[np.isnan(outvar3dZeta)] = fill_value
         return outvar3dZeta
+
+    def bottomValues(self, invar3d):
+        return extract_value_at_bottom(depths, invar3d)

@@ -54,6 +54,10 @@ if __name__ == '__main__':
     # Create a 3D biliniear interpolator on V points
     interpolator3DV = Interp3D(Vlon, Vlat, dstLon, dstLat, s_rho, mask_v, H)
 
+    print("h...")
+    H = interpolator2DRho.interp(H)
+    print("...h")
+
     print("zeta...")
     zeta = ncsrcfile["zeta"][:]
     zeta = interpolator2DRho.interp(zeta)
@@ -64,15 +68,27 @@ if __name__ == '__main__':
     temp = interpolator3DRho.interp(temp)
     print("...temp")
 
+    print("temp at bottom...")
+    temp_at_bottom = interpolator3DRho.bottomValues(temp)
+    print("...temp at bottom")
+
     print("salt...")
     salt = ncsrcfile["salt"][:]
     salt = interpolator3DRho.interp(salt)
     print("...salt")
 
+    print("salt at bottom...")
+    salt_at_bottom = interpolator3DRho.bottomValues(salt)
+    print("...salt at bottom")
+
     print("U...")
     u = ncsrcfile["u"][:]
     u = interpolator3DU.interp(u)
     print("...U")
+
+    print("U at bottom...")
+    U_at_bottom = interpolator3DRho.bottomValues(u)
+    print("...U at bottom")
 
     print("ubar...")
     ubar = ncsrcfile["ubar"][:]
@@ -84,17 +100,26 @@ if __name__ == '__main__':
     v = interpolator3DV.interp(v)
     print("...V")
 
+    print("V at bottom...")
+    V_at_bottom = interpolator3DRho.bottomValues(v)
+    print("...V at bottom")
+
     print("vbar...")
     vbar = ncsrcfile["vbar"][:]
     vbar = interpolator2DV.interp(vbar)
     print("...vbar")
 
     print("Saving archive file...")
+    roms.h = H
     roms.temp = temp
+    roms.tempBottom = temp_at_bottom
     roms.salt = salt
+    roms.saltBottom = salt_at_bottom
     roms.zeta = zeta
     roms.U = u
+    roms.uBottom = U_at_bottom
     roms.V = v
+    roms.vBottom = V_at_bottom
     roms.ubar = ubar
     roms.vbar = vbar
     roms.write()
