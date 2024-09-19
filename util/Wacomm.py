@@ -49,17 +49,17 @@ class Wacomm:
         self.latVar.standard_name = "latitude"
         self.latVar.axis = "Y"
 
-        self.maskVar = self.ncdstfile.createVariable("mask", "f4", ("latitude", "longitude"), fill_value=1.e37)
+        self.maskVar = self.ncdstfile.createVariable("mask", "f4", ("latitude", "longitude"), fill_value=1.e37, zlib=True, complevel=4)
         self.maskVar.option_0 = "land"
         self.maskVar.option_1 = "water"
         self.maskVar.long_name = "mask on RHO points"
 
-        self.concVar = self.ncdstfile.createVariable("conc", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37)
+        self.concVar = self.ncdstfile.createVariable("conc", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.concVar.description = "concentration of suspended matter in sea water"
         self.concVar.units = "1"
         self.concVar.long_name = "concentration"
 
-        self.sfconcVar = self.ncdstfile.createVariable("sfconc", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.sfconcVar = self.ncdstfile.createVariable("sfconc", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.sfconcVar.description = "concentration of suspended matter at the surface"
         self.sfconcVar.units = "1"
         self.sfconcVar.long_name = "surface_concentration"

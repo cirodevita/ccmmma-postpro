@@ -58,68 +58,68 @@ class ROMS:
         self.latVar.standard_name = "latitude"
         self.latVar.axis = "Y"
 
-        self.hVar = self.ncdstfile.createVariable("h", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.hVar = self.ncdstfile.createVariable("h", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.hVar.description = "Bathymetry"
         self.hVar.units = "meter"
         self.hVar.long_name = "bathymetry"
         self.hVar.field = "bath, scalar"
 
-        self.zetaVar = self.ncdstfile.createVariable("zeta", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.zetaVar = self.ncdstfile.createVariable("zeta", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.zetaVar.description = "Free surface height"
         self.zetaVar.units = "meter"
         self.zetaVar.long_name = "free-surface"
 
-        self.uVar = self.ncdstfile.createVariable("u", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37)
+        self.uVar = self.ncdstfile.createVariable("u", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.uVar.description = "U-momentum component"
         self.uVar.units = "meter second-1"
         self.uVar.long_name = "u-momentum component"
         self.uVar.field = "u-velocity, scalar, series"
 
-        self.uBottomVar = self.ncdstfile.createVariable("uBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.uBottomVar = self.ncdstfile.createVariable("uBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.uBottomVar.description = "U-momentum component at bottom"
         self.uBottomVar.units = "meter second-1"
         self.uBottomVar.long_name = "u-momentum component"
         self.uBottomVar.field = "u-velocity, scalar, series"
 
-        self.vVar = self.ncdstfile.createVariable("v", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37)
+        self.vVar = self.ncdstfile.createVariable("v", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.vVar.description = "V-momentum component"
         self.vVar.units = "meter second-1"
         self.vVar.long_name = "v-momentum component"
         self.vVar.field = "v-velocity, scalar, series"
 
-        self.vBottomVar = self.ncdstfile.createVariable("vBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.vBottomVar = self.ncdstfile.createVariable("vBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.vBottomVar.description = "V-momentum component at bottom"
         self.vBottomVar.units = "meter second-1"
         self.vBottomVar.long_name = "v-momentum component"
         self.vBottomVar.field = "v-velocity, scalar, series"
 
-        self.ubarVar = self.ncdstfile.createVariable("ubar", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.ubarVar = self.ncdstfile.createVariable("ubar", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.ubarVar.description = "Vertically integrated u-momentum component"
         self.ubarVar.units = "meter second-1"
         self.ubarVar.long_name = "vertically integrated u-momentum component"
 
-        self.vbarVar = self.ncdstfile.createVariable("vbar", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.vbarVar = self.ncdstfile.createVariable("vbar", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.vbarVar.description = "Vertically integrated v-momentum component"
         self.vbarVar.units = "meter second-1"
         self.vbarVar.long_name = "vertically integrated v-momentum component"
 
-        self.saltVar = self.ncdstfile.createVariable("salt", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37)
+        self.saltVar = self.ncdstfile.createVariable("salt", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.saltVar.description = "Salinity"
         self.saltVar.long_name = "salinity"
         self.saltVar.field = "salinity, scalar, series"
 
-        self.saltBottomVar = self.ncdstfile.createVariable("saltBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.saltBottomVar = self.ncdstfile.createVariable("saltBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.saltBottomVar.description = "Salinity at bottom"
         self.saltBottomVar.long_name = "salinity at bottom"
         self.saltBottomVar.field = "salinity, scalar, series"
 
-        self.tempVar = self.ncdstfile.createVariable("temp", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37)
+        self.tempVar = self.ncdstfile.createVariable("temp", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.tempVar.description = "Potential temperature"
         self.tempVar.units = "Celsius"
         self.tempVar.long_name = "potential temperature"
         self.tempVar.field = "temperature, scalar, series"
 
-        self.tempBottomVar = self.ncdstfile.createVariable("tempBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37)
+        self.tempBottomVar = self.ncdstfile.createVariable("tempBottom", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.tempBottomVar.description = "Potential temperature at bottom"
         self.tempBottomVar.units = "Celsius"
         self.tempBottomVar.long_name = "potential temperature at bottom"
