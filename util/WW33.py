@@ -7,6 +7,7 @@ class WW33:
         self.lats = lats
         self.time = time
 
+        self.dpt = None
         self.hs = None
         self.lm = None
         self.fp = None
@@ -47,6 +48,17 @@ class WW33:
         self.latVar.valid_min = -90.0 
         self.latVar.valid_max = 90.0
         self.latVar.axis = "Y"
+
+        self.dptVar = self.ncdstfile.createVariable("dpt", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
+        self.dptVar.description = "Depth"
+        self.dptVar.long_name = "depth" 
+        self.dptVar.standard_name = "depth" 
+        self.dptVar.globwave_name = "depth"
+        self.dptVar.units = "m"
+        self.dptVar.scale_factor = 1.0
+        self.dptVar.add_offset = 0.0
+        self.dptVar.valid_min = -90000
+        self.dptVar.valid_max = 140000
 
         self.hsVar = self.ncdstfile.createVariable("hs", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.hsVar.description = "Significant wave height"
@@ -108,6 +120,7 @@ class WW33:
         self.lonVar[:] = self.lons
         self.latVar[:] = self.lats
 
+        self.dptVar[:] = self.dpt
         self.hsVar[:] = self.hs
         self.lmVar[:] = self.lm
         self.fpVar[:] = self.fp

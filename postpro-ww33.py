@@ -36,6 +36,11 @@ if __name__ == '__main__':
     # Create a 2D biliniear interpolator on Rho points
     interpolator2D = Interp2D(Xlon, Xlat, dstLon, dstLat)
 
+    print("dpt...")
+    dpt = ncsrcfile.variables["dpt"][:]
+    dpt = interpolator2D.interp(dpt)
+    print("...dpt")
+
     print("hs...")
     hs = ncsrcfile.variables["hs"][:]
     hs = interpolator2D.interp(hs)
@@ -62,6 +67,7 @@ if __name__ == '__main__':
     print("...t0m1")
 
     print("Saving archive file...")
+    ww33.dpt = dpt
     ww33.hs = hs
     ww33.lm = lm
     ww33.fp = fp
