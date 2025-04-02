@@ -11,6 +11,7 @@ from util.Interpolator import Interp2D
 
 def get_date_time(date):
     dateTime = format(date.year,'04') + format(date.month,'02') + format(date.day,'02') + "Z"+format(date.hour,'02') + format(date.minute,'02')
+    #dateTime = f"{format(date.year,'04')}-{format(date.month,'02')}-{format(date.day,'02')}_{format(date.hour,'02')}:{format(date.minute,'02')}:00"
     return dateTime
 
 def get_date_time_path(date):
@@ -83,20 +84,17 @@ def getBoundaries(Xlon, Xlat):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 5:
-        print("Usage: python " + str(sys.argv[0]) + " initialization_date source_file history_dir destination_file")
+    if len(sys.argv) != 6:
+        print("Usage: python " + str(sys.argv[0]) + " initialization_date source_file source_file_1hago source_file_00 destination_file")
         sys.exit(-1)
 
     iDate = sys.argv[1]
     src = sys.argv[2]
-    history_dir = sys.argv[3]
-    dst = sys.argv[4]
+    src_1hago = sys.argv[3]
+    src_00 = sys.argv[4]
+    dst = sys.argv[5]
 
-    print("iDate:" + iDate + " src: " + src + " history: " + history_dir + " dst: " + dst)
-
-    parts = basename(src).split("_")
-    prod = parts[0]
-    domain = parts[1]
+    print("iDate:" + iDate + " src: " + src + " dst: " + dst)
 
     # Open the NetCDF file
     ncsrcfile = Dataset(src)
@@ -113,8 +111,8 @@ if __name__ == '__main__':
     time = [ datetime_current ]
     print("Dates -- current: " + str(datetime_current) + " 1h ago: " + str(datetime_1h_ago) + " today: " + str(datetime_00))
 
-    src_1hago = history_dir + "/" + get_date_time_path(datetime_1h_ago) + "/" + prod + "_" + domain + "_" + get_date_time(datetime_1h_ago) + ".nc"
-    src_00 = history_dir + "/" + get_date_time_path(datetime_00) + "/" + prod + "_" + domain + "_" + get_date_time(datetime_00) + ".nc"
+    #src_1hago = history_dir + "/" + get_date_time_path(datetime_1h_ago) + "/" + prod + "_" + domain + "_" + get_date_time(datetime_1h_ago) + ".nc"
+    #src_00 = history_dir + "/" + get_date_time_path(datetime_00) + "/" + prod + "_" + domain + "_" + get_date_time(datetime_00) + ".nc"
 
     print("Prev       : " + str(src_1hago))
     print("Current day: " + str(src_00))
@@ -266,9 +264,10 @@ if __name__ == '__main__':
         ncsrc_00.close()
 
         print("...done with daily processing.")
-    except:
+    except Exception as e:
         # If not previous hour, just calculate from 0
         print("WARNING *** Troubles with the daily dataset: " + src_00)
+        print(e)
 
         # Hourly rain
         raini_00 = raini

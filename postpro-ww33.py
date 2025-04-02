@@ -6,15 +6,16 @@ from util.Interpolator import Interp2D
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print("Usage: python " + str(sys.argv[0]) + " initialization_date source_file destination_file")
+    if len(sys.argv) != 5:
+        print("Usage: python " + str(sys.argv[0]) + " initialization_date source_file history_dir destination_file")
         sys.exit(-1)
 
     iDate = sys.argv[1]
     src = sys.argv[2]
-    dst = sys.argv[3]
+    history_dir = sys.argv[3]
+    dst = sys.argv[4]
 
-    print("iDate:" + iDate + " src: " + src + " dst: " + dst)
+    print("iDate:" + iDate + " src: " + src + " history: " + history_dir + " dst: " + dst)
 
     # Open the NetCDF file
     ncsrcfile = Dataset(src)
