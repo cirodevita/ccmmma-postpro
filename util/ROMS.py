@@ -17,9 +17,13 @@ class ROMS:
         self.vbar = None
         self.ubar = None
         self.tempBottom = None
-        self.saltbottom = None
+        self.saltBottom = None
         self.uBottom = None
         self.vBottom = None
+        self.tempSurface = None
+        self.saltSurface = None
+        self.uSurface = None
+        self.vSurface = None
 
         self.ncdstfile = Dataset(filename, "w", format="NETCDF4")
 
@@ -81,6 +85,12 @@ class ROMS:
         self.uBottomVar.long_name = "u-momentum component"
         self.uBottomVar.field = "u-velocity, scalar, series"
 
+        self.uSurfaceVar = self.ncdstfile.createVariable("uSurface", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
+        self.uSurfaceVar.description = "U-momentum component at surface"
+        self.uSurfaceVar.units = "meter second-1"
+        self.uSurfaceVar.long_name = "u-momentum component"
+        self.uSurfaceVar.field = "u-velocity, scalar, series"
+
         self.vVar = self.ncdstfile.createVariable("v", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.vVar.description = "V-momentum component"
         self.vVar.units = "meter second-1"
@@ -92,6 +102,12 @@ class ROMS:
         self.vBottomVar.units = "meter second-1"
         self.vBottomVar.long_name = "v-momentum component"
         self.vBottomVar.field = "v-velocity, scalar, series"
+
+        self.vSurfaceVar = self.ncdstfile.createVariable("vSurface", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
+        self.vSurfaceVar.description = "V-momentum component at surface"
+        self.vSurfaceVar.units = "meter second-1"
+        self.vSurfaceVar.long_name = "v-momentum component"
+        self.vSurfaceVar.field = "v-velocity, scalar, series"
 
         self.ubarVar = self.ncdstfile.createVariable("ubar", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.ubarVar.description = "Vertically integrated u-momentum component"
@@ -113,6 +129,11 @@ class ROMS:
         self.saltBottomVar.long_name = "salinity at bottom"
         self.saltBottomVar.field = "salinity, scalar, series"
 
+        self.saltSurfaceVar = self.ncdstfile.createVariable("saltSurface", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
+        self.saltSurfaceVar.description = "Salinity at surface"
+        self.saltSurfaceVar.long_name = "salinity at surface"
+        self.saltSurfaceVar.field = "salinity, scalar, series"
+
         self.tempVar = self.ncdstfile.createVariable("temp", "f4", ("time", "depth", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
         self.tempVar.description = "Potential temperature"
         self.tempVar.units = "Celsius"
@@ -124,6 +145,12 @@ class ROMS:
         self.tempBottomVar.units = "Celsius"
         self.tempBottomVar.long_name = "potential temperature at bottom"
         self.tempBottomVar.field = "temperature, scalar, series"
+
+        self.tempSurfaceVar = self.ncdstfile.createVariable("tempSurface", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
+        self.tempSurfaceVar.description = "Potential temperature at surface"
+        self.tempSurfaceVar.units = "Celsius"
+        self.tempSurfaceVar.long_name = "potential temperature at surface"
+        self.tempSurfaceVar.field = "temperature, scalar, series"
 
     def write(self):
         self.timeVar[:] = self.time
@@ -144,6 +171,11 @@ class ROMS:
         self.saltBottomVar[:] = self.saltBottom
         self.uBottomVar[:] = self.uBottom
         self.vBottomVar[:] = self.vBottom
+
+        self.tempSurfaceVar[:] = self.tempSurface
+        self.saltSurfaceVar[:] = self.saltSurface
+        self.uSurfaceVar[:] = self.uSurface
+        self.vSurfaceVar[:] = self.vSurface
 
     def close(self):
         if self.ncdstfile:

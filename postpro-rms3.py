@@ -72,6 +72,10 @@ if __name__ == '__main__':
     temp_at_bottom = interpolator3DRho.bottomValues(temp)
     print("...temp at bottom")
 
+    print("temp at surface...")
+    temp_at_surface = interpolator3DRho.surfaceValues(temp)
+    print("...temp at surface")
+
     print("salt...")
     salt = ncsrcfile["salt"][:]
     salt = interpolator3DRho.interp(salt)
@@ -81,6 +85,10 @@ if __name__ == '__main__':
     salt_at_bottom = interpolator3DRho.bottomValues(salt)
     print("...salt at bottom")
 
+    print("salt at surface...")
+    salt_at_surface = interpolator3DRho.surfaceValues(salt)
+    print("...salt at surface")
+
     print("U...")
     u = ncsrcfile["u"][:]
     u = interpolator3DU.interp(u)
@@ -89,6 +97,10 @@ if __name__ == '__main__':
     print("U at bottom...")
     U_at_bottom = interpolator3DRho.bottomValues(u)
     print("...U at bottom")
+
+    print("U at surface...")
+    U_at_surface = interpolator3DRho.surfaceValues(u, factor=1.2)
+    print("...U at surface")
 
     print("ubar...")
     ubar = ncsrcfile["ubar"][:]
@@ -104,6 +116,10 @@ if __name__ == '__main__':
     V_at_bottom = interpolator3DRho.bottomValues(v)
     print("...V at bottom")
 
+    print("V at surface...")
+    V_at_surface = interpolator3DRho.surfaceValues(v, factor=1.2)
+    print("...V at surface")
+
     print("vbar...")
     vbar = ncsrcfile["vbar"][:]
     vbar = interpolator2DV.interp(vbar)
@@ -113,13 +129,17 @@ if __name__ == '__main__':
     roms.h = H
     roms.temp = temp
     roms.tempBottom = temp_at_bottom
+    roms.tempSurface = temp_at_surface
     roms.salt = salt
     roms.saltBottom = salt_at_bottom
+    roms.saltSurface = salt_at_surface
     roms.zeta = zeta
     roms.U = u
     roms.uBottom = U_at_bottom
+    roms.uSurface = U_at_surface
     roms.V = v
     roms.vBottom = V_at_bottom
+    roms.vSurface = V_at_surface
     roms.ubar = ubar
     roms.vbar = vbar
     roms.write()

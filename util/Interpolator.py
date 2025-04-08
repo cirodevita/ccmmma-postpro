@@ -41,7 +41,7 @@ def vertical_interp(s_rho, variable, depths, mask_indices, H):
 
 
 @jit(nopython=True)
-def extract_value_at_bottom(depths, invar3d, invalid_value=1e37):
+def extract_value_at_bottom(invar3d, invalid_value=1e37):
     t, k, lon, lat = invar3d.shape
     output2D = np.full((t, lon, lat), invalid_value)
 
@@ -52,6 +52,20 @@ def extract_value_at_bottom(depths, invar3d, invalid_value=1e37):
         
             if len(valid_values) > 0:
                 output2D[0, j, i] = valid_values[-1]
+    
+    return output2D
+
+
+@jit(nopython=True)
+def extract_value_at_surface(invar3d, factor=1.0, invalid_value=1e37):
+    t, k, lon, lat = invar3d.shape
+    output2D = np.full((lon, lat), invalid_value)
+
+    for i in range(lat):
+        for j in range(lon):
+            val = invar3d[0, 0, j, i]
+            if val != invalid_value:
+                output2D[j, i] = val * factor
     
     return output2D
 
@@ -93,5 +107,8 @@ class Interp3D(Interp2D):
         outvar3dZeta[np.isnan(outvar3dZeta)] = fill_value
         return outvar3dZeta
 
-    def bottomValues(self, invar3d):
-        return extract_value_at_bottom(depths, invar3d)
+    def bottomValues(self, invar3d, invalid_value=1e37):
+        return extract_value_at_bottom(invar3d, invalid_value)
+    
+    def surfaceValues(self, invar3d, factor=1.0, invalid_value=1e37):
+        return extract_value_at_surface(invar3d, factor, invalid_value)
