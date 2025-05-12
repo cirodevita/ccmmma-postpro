@@ -5,6 +5,43 @@ from util.Interpolator import Interp2D, Interp3D, depths
 from util.Wacomm import Wacomm
 
 
+def compute_sfconc(conc, depth_limit, mask2d, depths, fill_value=1e37):
+    """
+    Compute the vertical sum of concentration up to a given depth,
+    ignoring fill values and masked areas.
+
+    Parameters:
+        conc (np.ndarray): 3D concentration array with shape (depth, lat, lon).
+        depth_limit (float): Maximum depth (in meters) for the integration.
+        mask2d (np.ndarray): 2D mask of shape (lat, lon) with 1 for water, 0 for land.
+        depths (list or np.ndarray): List of depth levels corresponding to the first axis of `conc`.
+        fill_value (float): Value used to indicate missing or invalid data.
+
+    Returns:
+        np.ndarray: 2D array (lat, lon) containing the summed concentration
+                    from the surface down to `depth_limit`.
+    """
+    # Ensure depths is a NumPy array
+    depth_arr = np.array(depths)
+
+    # Create boolean mask of levels <= depth_limit
+    depth_mask = depth_arr <= depth_limit  # shape (n_depths,)
+
+    # Expand spatial mask to 3D and combine with depth mask
+    mask3d = depth_mask[:, None, None] * mask2d[None, :, :]
+
+    # Replace fill values with zero so they don’t inflate the sum
+    conc_clean = np.where(conc == fill_value, 0.0, conc)
+
+    # Sum along the depth axis
+    sfconc = np.sum(conc_clean * mask3d, axis=0)  # shape (lat, lon)
+
+    # Restore fill_value on land points
+    sfconc[mask2d == 0] = fill_value
+
+    return sfconc
+
+
 if __name__ == '__main__':
     if len(sys.argv) != 5:
         print("Usage: python " + str(sys.argv[0]) + " initialization_date source_file history_dir destination_file")
@@ -40,20 +77,23 @@ if __name__ == '__main__':
     # Create a 3D biliniear interpolator on Rho points
     interpolator3DRho = Interp3D(Xlon, Xlat, dstLon, dstLat, s_rho, mask_rho, H)
 
-    # print("sfconc...")
-    # conc = ncsrcfile.variables["conc"][:]
-    # sfconc = interpolator2DRho.interp(conc[0, -1])
-    # print("...sfconc")
-
     print("conc...")
     conc = ncsrcfile.variables["conc"][:]
     conc = interpolator3DRho.interp(conc)
     print("...conc")
 
+    print("sfconc...")
+    sfconc = conc[0, 0]
+    sfconc_10m = compute_sfconc(conc[0], 10.0, interpolator3DRho.mask, depths)
+    sfconc_30m = compute_sfconc(conc[0], 30.0, interpolator3DRho.mask, depths)
+    print("...sfconc")
+
     print("Saving archive file...")
     wacomm.mask = interpolator3DRho.mask
     wacomm.conc = conc
-    wacomm.sfconc = conc[0, 0]
+    wacomm.sfconc = sfconc
+    wacomm.sfconc_10m = sfconc_10m
+    wacomm.sfconc_30m = sfconc_30m
     wacomm.write()
 
     # Close the NetCDF file

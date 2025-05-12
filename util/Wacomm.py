@@ -10,6 +10,8 @@ class Wacomm:
 
         self.conc = None
         self.sfconc = None
+        self.sfconc_10m = None
+        self.sfconc_30m = None
         self.mask = None
 
         self.ncdstfile = Dataset(filename, "w", format="NETCDF4")
@@ -64,6 +66,16 @@ class Wacomm:
         self.sfconcVar.units = "1"
         self.sfconcVar.long_name = "surface_concentration"
 
+        self.sfconc10mVar = self.ncdstfile.createVariable("sfconc10m", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
+        self.sfconc10mVar.description = "concentration of suspended matter at the surface at 10 meters"
+        self.sfconc10mVar.units = "1"
+        self.sfconc10mVar.long_name = "surface_concentration_10m"
+
+        self.sfconc30mVar = self.ncdstfile.createVariable("sfconc30m", "f4", ("time", "latitude", "longitude"), fill_value=1.e+37, zlib=True, complevel=4)
+        self.sfconc30mVar.description = "concentration of suspended matter at the surface at 30 meters"
+        self.sfconc30mVar.units = "1"
+        self.sfconc30mVar.long_name = "surface_concentration_30m"
+
     def write(self):
         self.timeVar[:] = self.time
         self.lonVar[:] = self.lons
@@ -72,6 +84,8 @@ class Wacomm:
 
         self.concVar[:] = self.conc
         self.sfconcVar[:] = self.sfconc
+        self.sfconc10mVar[:] = self.sfconc_10m
+        self.sfconc30mVar[:] = self.sfconc_30m
         self.maskVar[:] = self.mask
 
     def close(self):
